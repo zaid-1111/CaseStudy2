@@ -34,7 +34,7 @@ ub = []';
 lb = []';
 
 % Specify some initial parameters for the optimizer to start from
-x0 = []; 
+x0 = [1,0,0,0.1,0.01,0.1,1,0,0,0]; 
 
 % This is the key line that tries to opimize your model parameters in order to
 % fit the data

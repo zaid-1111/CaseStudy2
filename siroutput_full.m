@@ -12,10 +12,10 @@ k_infections = x(1);
 k_fatality = x(2);
 k_recover = x(3);
 % set up initial conditions
-ic_susc = x(4);
-ic_inf = x(5);
-ic_rec = x(6);
-ic_fatality = x(7);
+ic_susc = x(4)*STLmetroPop;
+ic_inf = x(5)*STLmetroPop;
+ic_rec = x(6)*STLmetroPop;
+ic_fatality = x(7)*STLmetroPop;
 % Set up SIRD within-population transmission matrix
 A = [1-k_infections,0,0 0; %Assumes that recovered people are immune
     k_infections, (1-k_fatality - k_recover), 0 ,0; %Assumes those who didnt die or recover are only ones still infected
