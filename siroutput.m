@@ -8,12 +8,13 @@ function f = siroutput(x,t,data)
 k_infections = x(1);
 k_fatality = x(2);
 k_recover = x(3);
-
+pop = 27.371370*1e5;
 % set up initial conditions
-ic_susc = x(4)*STLmetroPop;
-ic_inf = x(5)*STLmetroPop;
-ic_rec = x(6)*STLmetroPop;
-ic_fatality = x(7)*STLmetroPop;
+
+ic_susc = x(4)*pop;
+ic_inf = x(5)*pop;
+ic_rec = x(6)*pop;
+ic_fatality = x(7)*pop;
 
 % Set up SIRD within-population transmission matrix
 A = [1-k_infections,0,0 0; %Assumes that recovered people are immune
@@ -26,7 +27,7 @@ B = zeros(4,1);
 x0 = [ic_susc ic_inf ic_rec ic_fatality];
 
 % simulate the SIRD model for t time-steps
-sys_sir_base = ss(A,B,eye(4),zeros(4,1),1)
+sys_sir_base = ss(A,B,eye(4),zeros(4,1),1);
 y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 
 % return a "cost".  This is the quantitity that you want your model to
@@ -34,8 +35,14 @@ y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 % modeled data and the true data. Norms and distances will be useful here.
 % Hint: This is a central part of this case study!  choices here will have
 % a big impact!
-casedist = pdist2((1-Y(:,1))*STLmetroPop,COVID_STLmetro.cases,'euclidean'); 
-deathdist = pdist2(Y(:,4)*STLmetroPop,COVID_STLmetro.deaths,'euclidean');
-cost = casedist.*deathdist;
+
+
+casedist = ((1*pop-y(:,1)) - data.cases).^2;
+deathdist = (y(:,4) -  data.deaths).^2;
+
+
+
+cost = norm([casedist , deathdist]);
+
 f = cost;
 end
