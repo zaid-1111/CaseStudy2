@@ -3,8 +3,6 @@
 % t - the number of time-steps you wish to simulate
 
 function f = siroutput_full2(x,t)
-% Here is a suggested framework for x.  However, you are free to deviate
-% from this if you wish.
 
 % set up transmission constants
 k_infections = x(1);
@@ -20,14 +18,13 @@ ic_fatality = x(9);
 ic_vax = x(10);
 ic_BT = x(11);
 % Set up SIRD within-population transmission matrix
-A = [1-k_infections-k_vax,0,0,0,0,0; %Assumes that recovered people are immune
-    k_infections, (1-k_fatality - k_recover), 0 ,0,0,0; %Assumes those who didnt die or recover are only ones still infected
-    0, k_recover, 1, 0,0,k_recover;  % Assumes recovery is only happening to those who got infected
-    0, k_fatality,0,1,0,0;
-    k_vax,0,k_vax,0,1,0;
-    0,0,0,0,k_BT,1-k_recover;
-    ]; % Assumes the only ones dying are the ones infected
-% The next line creates a zero vector that will be used a few steps.
+A = [1-k_infections-k_vax, 0,                  0,0,0,0; 
+    k_infections,         (1-k_fatality - k_recover), 0,0,0,0; %Assumes that recovered people are immune
+    0, k_recover, 1-k_vax, 0,0,                            0;  
+    0, k_fatality,0,1,0,                             0;          % Assumes recovery is only happening to those who got infected
+    k_vax,0,k_vax,0,1-k_BT,                         k_recover;
+    0,0,0,0,         k_BT,                          1-k_recover;
+    ]; 
 B = zeros(6,1);
 
 % Set up the vector of initial conditions
@@ -37,5 +34,5 @@ x0 = [ic_susc ic_inf ic_rec ic_fatality ic_vax ic_BT];
 sys_sir_base = ss(A,B,eye(6),zeros(6,1),1);
 y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 
-f = y
+f = y;
 end

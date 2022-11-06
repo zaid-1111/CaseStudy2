@@ -4,29 +4,26 @@
 % data - actual data that you are attempting to fit
 
 function f = siroutput2(x,t,data)
-% Here is a suggested framework for x.  However, you are free to deviate
-% from this if you wish.
-
 % set up transmission constants
 k_infections = x(1);
 k_fatality = x(2);
 k_recover = x(3);
-k_vax = x(4);
-k_BT = x(5);
+k_vax = x(4);% Added vaccine constant
+k_BT = x(5);% Added breakthrough infection constant
 % set up initial conditions
 ic_susc = x(6);
 ic_inf = x(7);
 ic_rec = x(8);
 ic_fatality = x(9);
-ic_vax = x(10);
-ic_BT = x(11);
+ic_vax = x(10); %IC for vaccination
+ic_BT = x(11); %IC for breakthrough cases
 % Set up SIRD within-population transmission matrix
-A = [1-k_infections-k_vax,0,0,0,0,0; %Assumes that recovered people are immune
-    k_infections, (1-k_fatality - k_recover), 0 ,0,0,0; %Assumes those who didnt die or recover are only ones still infected
-    0, k_recover, 1, 0,0,k_recover;  % Assumes recovery is only happening to those who got infected
-    0, k_fatality,0,1,0,0;
-    k_vax,0,k_vax,0,1,0;
-    0,0,0,0,k_BT,1-k_recover;];                  % Assumes the only ones dying are the ones infected
+A = [1-k_infections-k_vax,  0,0,0,0,0;                   %Assumes that recovered people are immune
+    k_infections, (1-k_fatality - k_recover), 0 ,0,0,0; 
+    0, k_recover, 1-k_vax, 0,0,   0;                     % Assumes recovery is only happening to those who got infected
+    0, k_fatality,0,1,0,    0;
+    k_vax,0,k_vax,0,1-k_BT,k_recover;
+    0,0,0,0,k_BT,          1-k_recover;];                  
 % The next line creates a zero vector that will be used a few steps.
 B = zeros(6,1);
 

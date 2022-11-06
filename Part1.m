@@ -11,6 +11,7 @@ end
 plot(graphMatrixA.')
 SIRD(3,3)=0.995;
 SIRD(1,3)=0.005;
+title("Matrix A")
 graphMatrixB=[1000;0;0;0];
 SampleB=[1000;0;0;0];
 stepNumber=5000;
@@ -21,3 +22,4 @@ end
 figure()
 plot(graphMatrixB.')
 legend('S','I','R','D')
+title("Matrix B")
